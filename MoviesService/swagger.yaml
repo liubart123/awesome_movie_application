@@ -1,0 +1,79 @@
+openapi: 3.0.1
+info:
+  title: Movies app
+  version: v1
+servers:
+  - url: 'http://localhost:8800'
+tags:
+  - name: Movies
+
+security:
+  - bearerAuth: []
+paths:
+  /movies:
+    get:
+      summary: returns all movies added by logged user
+      tags:
+        - Movies
+      responses:
+        '200': #status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Movie'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    post:
+      summary: create movie according to given title
+      tags:
+        - Movies
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+        description: Title of movie for creation
+      responses:
+        '201': #status code
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Forbidden. User has limited amount of created movies per month according to user's role
+components:
+  schemas:
+    Movie:
+      type: object
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        title:
+          type: string
+        director:
+          type: string
+        genre:
+          type: string
+        released:
+          type: string
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  responses:
+    UnauthorizedError:
+      description: Unauthorized

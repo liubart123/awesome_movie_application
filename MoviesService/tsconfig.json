@@ -13,9 +13,11 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "experimentalDecorators": true,
-    "allowJs": true
+    "allowJs": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true
   },
   "lib": ["es2015"],
-  "include": ["src/**/*", "ormconfig.ts"],
+  "include": ["src/**/*", "ormconfig.ts", "swagger/swagger.yaml"],
   "exclude": ["node_modules"]
 }

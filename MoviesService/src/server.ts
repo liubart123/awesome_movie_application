@@ -1,12 +1,19 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import HttpException from 'types/HttpException';
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 
 import moviesRoute from './routes/movie';
 
 const app = express();
 
 app.use(bodyParser.json());
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(YAML.load(`swagger.yaml`)),
+);
 
 app.get('/', (_req, res) => res.send('Express + TypeScript Server'));
 app.use('/movies', moviesRoute);
