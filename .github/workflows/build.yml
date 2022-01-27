@@ -26,7 +26,7 @@ jobs:
           time: "10s"
       - name: Check running containers
         run: docker ps -a
-      - run: npm install
+      - run: npm install --prefix MoviesService 
       - name: migration
-        run: npm run typeorm migration:run
-      - run: npm test
+        run: npm run typeorm migration:run --prefix MoviesService 
+      - run: npm test  --prefix MoviesService 
