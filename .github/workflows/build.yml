@@ -19,8 +19,14 @@ jobs:
       - run: npm install
       - name: upping serivces
         run: |
-          docker-compose up --build db
-          docker-compose up --build authentication
+          docker-compose up --build -d db
+          docker-compose up --build -d authentication
+      - name: Sleep
+        uses: jakejarvis/wait-action@master
+        with:
+          time: '10s'
+      - name: Check running containers
+        run: docker ps -a
       - name: migration
         run: npm run typeorm migration:run
       - run: npm test
