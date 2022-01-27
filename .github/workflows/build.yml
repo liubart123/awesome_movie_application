@@ -28,5 +28,5 @@ jobs:
         run: docker ps -a
       - run: npm install
       - name: migration
-        run: npm run typeorm migration:run
-      - run: npm test
+        run: npm run typeorm migration:run --prefix MoviesService 
+      - run: npm test  --prefix MoviesService 
