@@ -1,6 +1,7 @@
 import config from './utils/config';
 import server from './server';
 import postgresStart from './db/bootstrap';
+import logger from './utils/logger';
 
 postgresStart()
   .then(() => {
@@ -9,7 +10,7 @@ postgresStart()
   .catch(console.error);
 
 server.listen(config.MOVIES_PORT, () => {
-  console.log(
+  logger.info(
     `⚡️[server]: Server is running at https://localhost:${config.MOVIES_PORT}`,
   );
 });

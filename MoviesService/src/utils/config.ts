@@ -6,6 +6,7 @@ const getNumericValue = (
 };
 
 export default {
+  NODE_ENV: process.env.NODE_ENV ?? 'development',
   MOVIES_PORT: getNumericValue(process.env.MOVIES_PORT, 8800),
   MOVIES_DB_PORT: getNumericValue(process.env.MOVIES_DB_PORT, 5432),
   MOVIES_DB_DATABASE: process.env.MOVIES_DB_DATABASE ?? 'movies',

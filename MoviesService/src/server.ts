@@ -5,10 +5,14 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 
 import moviesRoute from './routes/movie';
+import morganMiddleware from './middlewares/morganLogger';
 
 const app = express();
 
 app.use(bodyParser.json());
+
+app.use(morganMiddleware);
+
 app.use(
   '/api-docs',
   swaggerUi.serve,
