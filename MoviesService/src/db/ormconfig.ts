@@ -1,5 +1,6 @@
 import { ConnectionOptions } from 'typeorm';
 import config from '../utils/config';
+import DatabaseLogger from './dbLogger';
 export = {
   name: 'default',
   type: 'postgres',
@@ -14,6 +15,7 @@ export = {
     entitiesDir: 'src/db/entities',
     migrationsDir: 'src/db/migrations',
   },
-  logger: 'advanced-console',
+  logger: new DatabaseLogger(),
+  logging: 'all',
   autoLoadEntities: true,
 } as ConnectionOptions;

@@ -40,11 +40,17 @@ const MovieService = {
       currentDate.getFullYear(),
       currentDate.getMonth(),
       1,
+      0,
+      0,
+      0,
     );
     const lastDay = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth() + 1,
       0,
+      23,
+      59,
+      59,
     );
     const movies = await movieRepository.find({
       where: { userId, created: Between(firstDay, lastDay) },
