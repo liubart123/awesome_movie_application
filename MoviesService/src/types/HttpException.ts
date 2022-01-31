@@ -1,7 +1,12 @@
+import HttpStatuses from '../constants/HttpStatuses';
+
 class HttpException extends Error {
-  status: number;
+  status: HttpStatuses;
   message: string;
-  constructor(status = 500, message = 'some error') {
+  constructor(
+    status = HttpStatuses.INTERNAL_SERVER_ERROR,
+    message = 'some error',
+  ) {
     super(message);
     this.status = status;
     this.message = message;
