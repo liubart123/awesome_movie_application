@@ -132,6 +132,7 @@ describe('Movies controller', () => {
       //setting current time as last second of January
       const mockDate = new Date(2022, 0, 31, 23, 59, 59);
       const RealDate = Date;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (global as any).Date = class extends RealDate {
         constructor() {
           super();
