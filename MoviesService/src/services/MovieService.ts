@@ -2,6 +2,7 @@ import Movie from '../db/entities/Movie';
 import { getRepository, Between } from 'typeorm';
 import HttpException from '../types/HttpException';
 import HttpStatuses from '../constants/HttpStatuses';
+import DateService from './DateService';
 
 const MovieService = {
   insertMovie: async (movie: Movie) => {
@@ -15,6 +16,7 @@ const MovieService = {
         'Movie with such title has been already created by this user',
       );
     }
+    movie.created = new Date();
     const createdMovie = await movieRepository.save(movie);
     return createdMovie;
   },
@@ -31,23 +33,8 @@ const MovieService = {
 
   getMoviesAddedThisMonth: async (userId: number) => {
     const movieRepository = getRepository(Movie);
-    const currentDate = new Date();
-    const firstDay = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      1,
-      0,
-      0,
-      0,
-    );
-    const lastDay = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() + 1,
-      0,
-      23,
-      59,
-      59,
-    );
+    const { firstDay, lastDay } =
+      DateService.getFirstAndLastDayOfCurrentMonth();
     const movies = await movieRepository.find({
       where: { userId, created: Between(firstDay, lastDay) },
     });
