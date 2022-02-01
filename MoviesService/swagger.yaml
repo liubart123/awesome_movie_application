@@ -51,6 +51,32 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         '403':
           description: Forbidden. User has limited amount of created movies per month according to user's role
+        '404':
+          description: Movie with this title wasn't found
+  /movies/{id}:
+    get:
+      summary: returns movie by its id
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the movie  to get
+      tags:
+        - Movies
+      responses:
+        '200': #status code
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          description: Movie with this id wasn't found
+
 components:
   schemas:
     Movie:

@@ -1,24 +1,26 @@
+import HttpStatuses from '../constants/HttpStatuses';
 import { Request, Response, NextFunction } from 'express';
 import MovieService from '../services/MovieService';
 import HttpException from '../types/HttpException';
+import OmdbService from '../services/OmdbService';
 
 const MovieController = {
   createMovie: async (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
-      next(new HttpException(401));
+      next(new HttpException(HttpStatuses.UNAUTHORIZED));
       return;
     }
 
-    if (!req.body || !req.body.title) {
-      next(new HttpException(400, `invalid object was sended`));
-      return;
-    }
-
-    const detailedMovie = await MovieService.fetchAdditionalMovieDetails(
+    const detailedMovie = await OmdbService.fetchAdditionalMovieDetails(
       req.body?.title,
     );
     if (!detailedMovie) {
-      next(new HttpException(404, 'movie with this title was not found'));
+      next(
+        new HttpException(
+          HttpStatuses.NOT_FOUND,
+          'movie with this title was not found',
+        ),
+      );
       return;
     }
 
@@ -27,17 +29,27 @@ const MovieController = {
         req.user?.userId,
       );
       if (usersMovies.length >= 5) {
-        next(new HttpException(403, 'you can create olny 5 movies per month'));
+        next(
+          new HttpException(
+            HttpStatuses.FORBIDDEN,
+            'you can create olny 5 movies per month',
+          ),
+        );
         return;
       }
     }
-    const createdMovie = await MovieService.insertMovie({
+    MovieService.insertMovie({
       userId: req.user.userId,
       ...detailedMovie,
       id: undefined,
       created: undefined,
-    });
-    res.status(201).json(createdMovie);
+    })
+      .then((createdMovie) => {
+        res.status(HttpStatuses.CREATED).json(createdMovie);
+      })
+      .catch((error) => {
+        next(error);
+      });
   },
   getAllUsersMovies: async (
     req: Request,
@@ -45,11 +57,33 @@ const MovieController = {
     next: NextFunction,
   ) => {
     if (!req.user) {
-      next(new HttpException(401));
+      next(new HttpException(HttpStatuses.UNAUTHORIZED));
       return;
     }
     const movies = await MovieService.getMovies(req.user?.userId);
     res.json(movies);
+  },
+  getMovie: async (req: Request, res: Response, next: NextFunction) => {
+    if (!req.params.id || Number.isInteger(req.params.id)) {
+      next(
+        new HttpException(
+          HttpStatuses.BAD_REQUEST,
+          'Request must contain movie id',
+        ),
+      );
+      return;
+    }
+    const movie = await MovieService.getMovie(Number.parseInt(req.params.id));
+    if (!movie) {
+      next(
+        new HttpException(
+          HttpStatuses.NOT_FOUND,
+          'Movie with such id doesn`t exist',
+        ),
+      );
+      return;
+    }
+    res.json(movie);
   },
 };
 
