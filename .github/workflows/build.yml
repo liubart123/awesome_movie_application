@@ -1,11 +1,7 @@
 name: Build
 
 on:
-  push:
-    branches: [master]
   pull_request:
-    branches: [master]
-
   workflow_dispatch:
 
 jobs:
@@ -26,7 +22,7 @@ jobs:
           time: "10s"
       - name: Check running containers
         run: docker ps -a
-      - run: npm install --prefix MoviesService 
+      - run: npm install --prefix MoviesService
       - name: migration
-        run: npm run typeorm migration:run --prefix MoviesService 
-      - run: npm test  --prefix MoviesService 
+        run: npm run typeorm migration:run --prefix MoviesService
+      - run: npm test  --prefix MoviesService
